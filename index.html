@@ -21,7 +21,6 @@
         @media (min-width: 768px) {
             .chart-container { height: 350px; }
         }
-        /* Custom Scrollbar for Day Selector */
         .scrollbar-hide::-webkit-scrollbar {
             display: none;
         }
@@ -46,8 +45,18 @@
             display: inline-block;
             margin-right: 4px;
         }
+        .map-link {
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 2px;
+        }
+        .map-link:hover {
+            text-decoration: underline;
+        }
     </style>
-    <!-- Chosen Palette: Warm Neutrals (Stone) with Teal (Healing) & Orange (Energy) accents -->
 </head>
 <body class="bg-stone-50 text-stone-800 min-h-screen flex flex-col">
 
@@ -72,8 +81,8 @@
             <h2 class="text-lg font-bold mb-2">여행 컨셉: 힐링 & 소녀감성 🌿💅</h2>
             <p class="text-sm text-stone-600 leading-relaxed">
                 아빠, 엄마, 딸(초6)이 함께하는 다낭 여행! 
-                <strong>힐링</strong>, <strong>미식</strong>, <strong>쇼핑</strong>은 물론 딸을 위한 <strong>소녀감성 충전</strong>까지 완벽하게 준비했습니다.
-                각 장소별 상세한 <strong>이동 수단(그랩/도보/차량)</strong>을 확인하세요!
+                <strong>힐링</strong>, <strong>미식</strong>, <strong>쇼핑</strong>은 물론 딸을 위한 <strong>소녀감성 충전</strong>까지.
+                일정 옆의 <span class="text-blue-600 font-bold">📍</span> 아이콘을 누르면 <strong>구글 지도</strong>로 바로 연결됩니다.
             </p>
         </section>
 
@@ -84,7 +93,7 @@
 
     </main>
 
-    <!-- Bottom Navigation (Mobile Friendly) -->
+    <!-- Bottom Navigation -->
     <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-stone-200 shadow-lg md:relative md:border-none md:shadow-none md:bg-transparent md:mt-4 z-50">
         <div class="max-w-4xl mx-auto flex justify-around md:justify-center md:gap-8 p-3">
             <button onclick="switchView('itinerary')" class="nav-btn flex flex-col items-center p-2 text-stone-400 hover:text-stone-700" data-target="itinerary">
@@ -114,77 +123,77 @@
                 {
                     day: 1, date: '12.31 (수)', title: '설레는 도착 & 카운트다운 🎉',
                     events: [
-                        { time: '18:45', icon: '🛫', text: '인천공항 출발 (WE201)', transport: '', detail: '시간 변경 반영됨' },
-                        { time: '21:55', icon: '🛬', text: '다낭 공항 도착', transport: '', detail: '짐 찾고 입국장 밖 클룩 기사님 미팅' },
-                        { time: '22:45', icon: '🚐', text: '윙크 호텔 이동', transport: '클룩 픽업차량', detail: '편안하게 호텔로 이동' },
-                        { time: '23:15', icon: '🏨', text: '윙크 호텔 체크인', transport: '', detail: '24시간 스테이 적용 확인' },
+                        { time: '18:45', icon: '🛫', text: '인천공항 출발 (WE201)', transport: '', mapUrl: 'https://www.google.com/maps/search/?api=1&query=Incheon+International+Airport', detail: '시간 변경 반영됨' },
+                        { time: '21:55', icon: '🛬', text: '다낭 공항 도착', transport: '', mapUrl: 'https://www.google.com/maps/search/?api=1&query=Da+Nang+International+Airport', detail: '짐 찾고 입국장 밖 클룩 기사님 미팅' },
+                        { time: '22:45', icon: '🚐', text: '윙크 호텔 이동', transport: '클룩 픽업차량', mapUrl: 'https://www.google.com/maps/search/?api=1&query=Wink+Hotel+Danang+Riverside', detail: '편안하게 호텔로 이동' },
+                        { time: '23:15', icon: '🏨', text: '윙크 호텔 체크인', transport: '', mapUrl: 'https://www.google.com/maps/search/?api=1&query=Wink+Hotel+Danang+Riverside', detail: '24시간 스테이 적용 확인' },
                         { time: '24:00', icon: '✨', text: 'HAPPY NEW YEAR!', transport: '', detail: '루프탑/객실 불꽃놀이 & 야식(배달K)' }
                     ]
                 },
                 {
                     day: 2, date: '01.01 (목)', title: '핑크빛 시내 투어 & 모녀 데이트 ✨',
                     events: [
-                        { time: '09:30', icon: '🚕', text: '호텔 → 핑크 성당', transport: '그랩', detail: '도보 불가, 그랩 추천' },
-                        { time: '10:00', icon: '📸', text: '핑크 성당 (다낭 대성당) 관람', transport: '관람', detail: '아이 인생샷 스팟' },
-                        { time: '10:30', icon: '🚶', text: '한시장 & 금은방 환전', transport: '도보 1분', detail: 'Soan Ha 환전. 크록스, 라탄백, 원피스 쇼핑' },
-                        { time: '11:30', icon: '☕', text: '콩카페 1호점', transport: '도보 3분', detail: '코코넛 스무디 커피 당 충전' },
-                        { time: '12:30', icon: '🍕', text: '피자포피스 (인도차이나점)', transport: '도보 5~8분', detail: '날씨 더우면 그랩. 화덕피자 & 게살파스타' },
-                        { time: '14:00', icon: '🛍️', text: '아기자기 소품샵 투어', transport: '도보', detail: '부부샵, 코메이 등. 지비츠, 키링, 라탄백 쇼핑' },
-                        { time: '15:30', icon: '🚕', text: '영흥사(링엄사) 이동', transport: '그랩 (20분)', detail: '해수관음상 & 미케비치 뷰' },
-                        { time: '17:00', icon: '🦀', text: '목 식당 (Moc Seafood)', transport: '그랩 (내려오는 길)', detail: '칠리새우, 모닝글로리, 가리비 구이' },
-                        { time: '18:30', icon: '🎡', text: '손트라 야시장 & 용다리', transport: '그랩', detail: '철판 아이스크림, 캐릭터 소품' },
-                        { time: '19:30', icon: '🏨', text: '호텔 복귀 & 휴식', transport: '도보 or 그랩', detail: '가깝지만 피곤하면 그랩 추천' }
+                        { time: '09:30', icon: '🚕', text: '호텔 → 핑크 성당', transport: '그랩', mapUrl: 'https://www.google.com/maps/search/?api=1&query=Da+Nang+Cathedral', detail: '도보 불가, 그랩 추천' },
+                        { time: '10:00', icon: '📸', text: '핑크 성당 (다낭 대성당) 관람', transport: '관람', mapUrl: 'https://www.google.com/maps/search/?api=1&query=Da+Nang+Cathedral', detail: '아이 인생샷 스팟' },
+                        { time: '10:30', icon: '🚶', text: '한시장 & 금은방 환전', transport: '도보 1분', mapUrl: 'https://www.google.com/maps/search/?api=1&query=Han+Market+Da+Nang', detail: 'Soan Ha 환전. 크록스, 라탄백, 원피스 쇼핑' },
+                        { time: '11:30', icon: '☕', text: '콩카페 1호점', transport: '도보 3분', mapUrl: 'https://www.google.com/maps/search/?api=1&query=Cong+Caphe+98+Bach+Dang', detail: '코코넛 스무디 커피 당 충전' },
+                        { time: '12:30', icon: '🍕', text: '피자포피스 (인도차이나점)', transport: '도보 5~8분', mapUrl: 'https://www.google.com/maps/search/?api=1&query=Pizza+4Ps+Indochina+Da+Nang', detail: '날씨 더우면 그랩. 화덕피자 & 게살파스타' },
+                        { time: '14:00', icon: '🛍️', text: '아기자기 소품샵 (부부샵 등)', transport: '도보', mapUrl: 'https://www.google.com/maps/search/?api=1&query=BuBu+Cafe+Souvenir+Da+Nang', detail: '부부샵, 코메이 등. 지비츠, 키링 쇼핑' },
+                        { time: '15:30', icon: '🚕', text: '영흥사(링엄사) 이동', transport: '그랩 (20분)', mapUrl: 'https://www.google.com/maps/search/?api=1&query=Linh+Ung+Pagoda+Son+Tra', detail: '해수관음상 & 미케비치 뷰' },
+                        { time: '17:00', icon: '🦀', text: '목 식당 (Moc Seafood)', transport: '그랩', mapUrl: 'https://www.google.com/maps/search/?api=1&query=Moc+Quan+Seafood+Da+Nang', detail: '칠리새우, 모닝글로리, 가리비 구이' },
+                        { time: '18:30', icon: '🎡', text: '손트라 야시장 & 용다리', transport: '그랩', mapUrl: 'https://www.google.com/maps/search/?api=1&query=Son+Tra+Night+Market', detail: '철판 아이스크림, 캐릭터 소품' },
+                        { time: '19:30', icon: '🏨', text: '호텔 복귀 & 휴식', transport: '도보 or 그랩', mapUrl: 'https://www.google.com/maps/search/?api=1&query=Wink+Hotel+Danang+Riverside', detail: '가깝지만 피곤하면 그랩 추천' }
                     ]
                 },
                 {
                     day: 3, date: '01.02 (금)', title: '바나힐 (아이들의 천국) 🏰',
                     events: [
-                        { time: '09:30', icon: '🏨', text: '윙크 호텔 체크아웃', transport: '', detail: '빠진 짐 없는지 확인' },
-                        { time: '09:40', icon: '🚐', text: '바나힐 출발', transport: '야놀자 차량', detail: '캐리어 차량 트렁크 보관' },
-                        { time: '10:30', icon: '🚡', text: '바나힐 테마파크', transport: '케이블카/도보', detail: '골든브릿지 → 판타지 파크(루지, 범퍼카) 집중' },
-                        { time: '16:30', icon: '🚐', text: '바나힐 → 노보텔 이동', transport: '야놀자 차량', detail: '주차장 기사님 미팅 후 직행' },
-                        { time: '17:30', icon: '🏨', text: '노보텔 체크인', transport: '', detail: '1 Bedroom Apt, 엑스트라 베드 확인' },
-                        { time: '20:00', icon: '🍜', text: '저녁: 마담란', transport: '도보 5분', detail: '반세오 맛집 (호텔 후문)' },
-                        { time: '21:30', icon: '🦶', text: '발 마사지 (센스 스파 등)', transport: '도보', detail: '마담란/노보텔 근처라 도보 이동 가능' }
+                        { time: '09:30', icon: '🏨', text: '윙크 호텔 체크아웃', transport: '', mapUrl: 'https://www.google.com/maps/search/?api=1&query=Wink+Hotel+Danang+Riverside', detail: '빠진 짐 없는지 확인' },
+                        { time: '09:40', icon: '🚐', text: '바나힐 출발', transport: '야놀자 차량', mapUrl: 'https://www.google.com/maps/search/?api=1&query=Sun+World+Ba+Na+Hills', detail: '캐리어 차량 트렁크 보관' },
+                        { time: '10:30', icon: '🚡', text: '바나힐 테마파크', transport: '케이블카/도보', mapUrl: 'https://www.google.com/maps/search/?api=1&query=Sun+World+Ba+Na+Hills', detail: '골든브릿지 → 판타지 파크(루지, 범퍼카) 집중' },
+                        { time: '16:30', icon: '🚐', text: '바나힐 → 노보텔 이동', transport: '야놀자 차량', mapUrl: 'https://www.google.com/maps/search/?api=1&query=Novotel+Danang+Premier+Han+River', detail: '주차장 기사님 미팅 후 직행' },
+                        { time: '17:30', icon: '🏨', text: '노보텔 체크인', transport: '', mapUrl: 'https://www.google.com/maps/search/?api=1&query=Novotel+Danang+Premier+Han+River', detail: '1 Bedroom Apt, 엑스트라 베드 확인' },
+                        { time: '20:00', icon: '🍜', text: '저녁: 마담란', transport: '도보 5분', mapUrl: 'https://www.google.com/maps/search/?api=1&query=Madame+Lan+Restaurant+Da+Nang', detail: '반세오 맛집 (호텔 후문)' },
+                        { time: '21:30', icon: '🦶', text: '발 마사지 (센스 스파 등)', transport: '도보', mapUrl: 'https://www.google.com/maps/search/?api=1&query=Sense+Spa+Da+Nang', detail: '마담란/노보텔 근처라 도보 이동 가능' }
                     ]
                 },
                 {
                     day: 4, date: '01.03 (토)', title: '호이안 체험 & 감성 여행 🏮',
                     events: [
-                        { time: '10:30', icon: '🚐', text: '호이안 이동', transport: '클룩 차량', detail: '약 40분 소요' },
-                        { time: '11:30', icon: '🥙', text: '점심: 호이안 맛집', transport: '도보', detail: '포슈아 or 반미프엉 (올드타운 내 차량 불가)' },
-                        { time: '13:00', icon: '🏖️', text: '안방 비치', transport: '그랩', detail: '라플라주/소울키친 카페 휴식' },
-                        { time: '15:30', icon: '🥥', text: '바구니 배 (코코넛 보트)', transport: '그랩', detail: '신나는 트로트 분위기 체험' },
-                        { time: '17:00', icon: '🚕', text: '호이안 올드타운 입구 이동', transport: '그랩', detail: '' },
+                        { time: '10:30', icon: '🚐', text: '호이안 이동', transport: '클룩 차량', mapUrl: 'https://www.google.com/maps/search/?api=1&query=Hoi+An+Old+Town', detail: '약 40분 소요' },
+                        { time: '11:30', icon: '🥙', text: '점심: 호이안 맛집', transport: '도보', mapUrl: 'https://www.google.com/maps/search/?api=1&query=Pho+Xua+Hoi+An', detail: '포슈아 or 반미프엉 (올드타운 내 차량 불가)' },
+                        { time: '13:00', icon: '🏖️', text: '안방 비치', transport: '그랩', mapUrl: 'https://www.google.com/maps/search/?api=1&query=An+Bang+Beach', detail: '라플라주/소울키친 카페 휴식' },
+                        { time: '15:30', icon: '🥥', text: '바구니 배 (코코넛 보트)', transport: '그랩', mapUrl: 'https://www.google.com/maps/search/?api=1&query=Rung+Dua+Bay+Mau', detail: '신나는 트로트 분위기 체험' },
+                        { time: '17:00', icon: '🚕', text: '호이안 올드타운 입구 이동', transport: '그랩', mapUrl: 'https://www.google.com/maps/search/?api=1&query=Hoi+An+Old+Town', detail: '' },
                         { time: '17:10', icon: '🏮', text: '[Option] 랜턴 만들기', transport: '도보', detail: '공방 이동하여 체험' },
-                        { time: '18:00', icon: '🛶', text: '소원배 타기 & 야시장', transport: '나룻배/도보', detail: '소원초 띄우기' },
-                        { time: '20:00', icon: '🥟', text: '저녁: 미쓰리', transport: '도보', detail: '화이트로즈, 완탄' },
-                        { time: '21:30', icon: '🚐', text: '다낭 호텔 복귀', transport: '클룩 차량', detail: '올드타운 입구에서 기사님 미팅' }
+                        { time: '18:00', icon: '🛶', text: '소원배 타기 & 야시장', transport: '나룻배/도보', mapUrl: 'https://www.google.com/maps/search/?api=1&query=Hoi+An+Night+Market', detail: '소원초 띄우기' },
+                        { time: '20:00', icon: '🥟', text: '저녁: 미쓰리', transport: '도보', mapUrl: 'https://www.google.com/maps/search/?api=1&query=Miss+Ly+Cafe+Hoi+An', detail: '화이트로즈, 완탄' },
+                        { time: '21:30', icon: '🚐', text: '다낭 호텔 복귀', transport: '클룩 차량', mapUrl: 'https://www.google.com/maps/search/?api=1&query=Novotel+Danang+Premier+Han+River', detail: '올드타운 입구에서 기사님 미팅' }
                     ]
                 },
                 {
                     day: 5, date: '01.04 (일)', title: '쇼핑 & 헬리오 센터 🚢',
                     events: [
                         { time: '오전', icon: '🛌', text: '늦잠 & 조식 브런치', transport: '', detail: '여유로운 시작' },
-                        { time: '11:00', icon: '📸', text: '참 조각 박물관 & APEC 공원', transport: '그랩', detail: '가깝지만 더우니 그랩 추천' },
-                        { time: '12:30', icon: '🦐', text: '점심: 브릴리언트 씨푸드', transport: '그랩', detail: '깔끔하고 고급스러운 식당' },
-                        { time: '14:00', icon: '🛒', text: '롯데마트 쇼핑', transport: '그랩', detail: '탑젤리, 아하치즈, 쵸이젤리, 컵라면' },
-                        { time: '16:30', icon: '🎮', text: '헬리오 야시장 & 게임존', transport: '도보 3분', detail: '롯데마트 옆. 실내 오락실 추천' },
-                        { time: '19:30', icon: '🚢', text: '다낭 한강 유람선', transport: '그랩', detail: '선착장 이동. 용다리 불쇼 관람 (21:00)' },
-                        { time: '21:30', icon: '🦶', text: '발 마사지 & 숙소 복귀', transport: '그랩', detail: '골든 로터스 or 센스 스파. 마사지 후 그랩 이동' }
+                        { time: '11:00', icon: '📸', text: '참 조각 박물관 & APEC 공원', transport: '그랩', mapUrl: 'https://www.google.com/maps/search/?api=1&query=Museum+of+Cham+Sculpture', detail: '가깝지만 더우니 그랩 추천' },
+                        { time: '12:30', icon: '🦐', text: '점심: 브릴리언트 씨푸드', transport: '그랩', mapUrl: 'https://www.google.com/maps/search/?api=1&query=Brilliant+Seafood+Da+Nang', detail: '깔끔하고 고급스러운 식당' },
+                        { time: '14:00', icon: '🛒', text: '롯데마트 쇼핑', transport: '그랩', mapUrl: 'https://www.google.com/maps/search/?api=1&query=Lotte+Mart+Da+Nang', detail: '탑젤리, 아하치즈, 쵸이젤리, 컵라면' },
+                        { time: '16:30', icon: '🎮', text: '헬리오 야시장 & 게임존', transport: '도보 3분', mapUrl: 'https://www.google.com/maps/search/?api=1&query=Helio+Center', detail: '롯데마트 옆. 실내 오락실 추천' },
+                        { time: '19:30', icon: '🚢', text: '다낭 한강 유람선', transport: '그랩', mapUrl: 'https://www.google.com/maps/search/?api=1&query=Han+River+Port+Da+Nang', detail: '선착장 이동. 용다리 불쇼 관람 (21:00)' },
+                        { time: '21:30', icon: '🦶', text: '발 마사지 & 숙소 복귀', transport: '그랩', mapUrl: 'https://www.google.com/maps/search/?api=1&query=Golden+Lotus+Oriental+Organic+Spa+Da+Nang', detail: '골든 로터스 or 센스 스파. 마사지 후 그랩 이동' }
                     ]
                 },
                 {
                     day: 6, date: '01.05 (월)', title: '오행산 & Last Fun ✈️',
                     events: [
-                        { time: '11:00', icon: '🏨', text: '체크아웃 & 짐 보관', transport: '', detail: '호텔 로비 무료 보관' },
-                        { time: '11:30', icon: '⛰️', text: '오행산 (마블 마운틴)', transport: '그랩', detail: '엘리베이터 + 도보 이동' },
-                        { time: '13:30', icon: '🍜', text: '점심: 미광 1A or 냐벱', transport: '그랩', detail: '' },
-                        { time: '15:30', icon: '🎡', text: '아시아 파크 (썬월드)', transport: '그랩', detail: '내부 도보 이동. 썬휠 대관람차' },
-                        { time: '17:30', icon: '🍽️', text: '저녁 식사 (티아고 or 포홍)', transport: '그랩', detail: '티아고(가정식) 또는 포홍(쌀국수)' },
-                        { time: '18:40', icon: '🏨', text: '호텔 짐 찾기 & 픽업 대기', transport: '그랩/도보', detail: '투란 스파 픽업 차량 미팅 (로비)' },
-                        { time: '19:00', icon: '💆‍♀️', text: '투란 스파 (Turan Spa)', transport: '스파 픽업차량', detail: '어른(2): 90분 마사지 / 아이: 네일아트' },
-                        { time: '20:30', icon: '🚐', text: '공항 이동', transport: '스파 샌딩차량', detail: '편안하게 공항으로 이동' },
+                        { time: '11:00', icon: '🏨', text: '체크아웃 & 짐 보관', transport: '', mapUrl: 'https://www.google.com/maps/search/?api=1&query=Novotel+Danang+Premier+Han+River', detail: '호텔 로비 무료 보관' },
+                        { time: '11:30', icon: '⛰️', text: '오행산 (마블 마운틴)', transport: '그랩', mapUrl: 'https://www.google.com/maps/search/?api=1&query=Marble+Mountains+Da+Nang', detail: '엘리베이터 + 도보 이동' },
+                        { time: '13:30', icon: '🍜', text: '점심: 미광 1A or 냐벱', transport: '그랩', mapUrl: 'https://www.google.com/maps/search/?api=1&query=Mi+Quang+1A', detail: '' },
+                        { time: '15:30', icon: '🎡', text: '아시아 파크 (썬월드)', transport: '그랩', mapUrl: 'https://www.google.com/maps/search/?api=1&query=Asia+Park+Sun+World', detail: '내부 도보 이동. 썬휠 대관람차' },
+                        { time: '17:30', icon: '🍽️', text: '저녁 식사 (티아고 or 포홍)', transport: '그랩', mapUrl: 'https://www.google.com/maps/search/?api=1&query=Thia+Go+Restaurant+Da+Nang', detail: '티아고(가정식) 또는 포홍(쌀국수)' },
+                        { time: '18:40', icon: '🏨', text: '호텔 짐 찾기 & 픽업 대기', transport: '그랩/도보', mapUrl: 'https://www.google.com/maps/search/?api=1&query=Novotel+Danang+Premier+Han+River', detail: '투란 스파 픽업 차량 미팅 (로비)' },
+                        { time: '19:00', icon: '💆‍♀️', text: '투란 스파 (Turan Spa) 이동', transport: '스파 픽업차량', mapUrl: 'https://www.google.com/maps/search/?api=1&query=Turan+Spa+Da+Nang', detail: '어른(2): 90분 마사지 / 아이: 네일아트' },
+                        { time: '20:30', icon: '🚐', text: '공항 이동', transport: '스파 샌딩차량', mapUrl: 'https://www.google.com/maps/search/?api=1&query=Da+Nang+International+Airport', detail: '편안하게 공항으로 이동' },
                         { time: '22:55', icon: '🛫', text: '다낭 출발 (WE202)', transport: '', detail: '1/6 05:30 인천 도착' }
                     ]
                 }
@@ -249,7 +258,7 @@
         function renderItinerary(container) {
             const intro = document.createElement('div');
             intro.className = 'bg-stone-100 p-4 rounded-lg mb-4';
-            intro.innerHTML = `<p class="text-sm text-stone-600">📅 <strong>5박 6일 상세 일정</strong>입니다. 날짜를 클릭하여 세부 계획과 <strong>이동 수단</strong>을 확인하세요.</p>`;
+            intro.innerHTML = `<p class="text-sm text-stone-600">📅 <strong>5박 6일 상세 일정</strong>입니다. 날짜를 클릭하여 세부 계획과 <strong>이동 수단</strong>을 확인하세요. <span class="text-blue-600">📍</span>를 누르면 지도가 열립니다.</p>`;
             container.appendChild(intro);
 
             // Day Selectors
@@ -288,6 +297,7 @@
                             <div class="flex flex-wrap items-center gap-2 mb-1">
                                 <span class="text-xs font-bold bg-orange-100 text-orange-800 px-2 py-0.5 rounded">${event.time}</span>
                                 ${event.transport ? `<span class="transport-badge">🚗 ${event.transport}</span>` : ''}
+                                ${event.mapUrl ? `<a href="${event.mapUrl}" target="_blank" class="map-link text-xs">📍 지도</a>` : ''}
                             </div>
                             <h4 class="font-bold text-stone-800 leading-tight">${event.text}</h4>
                             ${event.detail ? `<p class="text-xs text-stone-500 mt-1">${event.detail}</p>` : ''}
