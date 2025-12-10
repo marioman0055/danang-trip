@@ -21,13 +21,13 @@
         @media (min-width: 768px) {
             .chart-container { height: 350px; }
         }
-        .tab-active {
-            border-bottom: 2px solid #57534e; /* stone-600 */
-            color: #57534e;
-            font-weight: 700;
+        /* Custom Scrollbar for Day Selector */
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
         }
-        .tab-inactive {
-            color: #a8a29e; /* stone-400 */
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
         }
         .fade-in {
             animation: fadeIn 0.3s ease-in-out;
@@ -36,22 +36,18 @@
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        .transport-badge {
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            background-color: #f3f4f6;
+            color: #4b5563;
+            border: 1px solid #e5e7eb;
+            display: inline-block;
+            margin-right: 4px;
+        }
     </style>
-    <!-- Chosen Palette: Warm Neutrals (Stone, Orange, Teal accents) -->
-    <!-- Application Structure Plan: 
-         1. Dashboard Header: Trip summary and countdown to build excitement.
-         2. Tab Navigation: Persistent bottom (mobile) or top (desktop) nav to switch between key views: '일정(Itinerary)', '예산(Budget)', '체크리스트(Checklist)', '정보(Info)'.
-         3. Itinerary View: Interactive day selector allowing deep dive into specific daily plans without scrolling fatigue.
-         4. Budget View: Doughnut chart for cost visualization and list for details.
-         5. Checklist View: Interactive to-do list with progress tracking.
-         6. Info View: Flight, Hotel, and Emergency details card.
-         Rationale: This structure separates distinct tasks (planning vs. packing vs. budgeting) for clarity. -->
-    <!-- Visualization & Content Choices:
-         1. Budget Chart: Chart.js Doughnut. Goal: Compare expenses. Justification: Easy to see the biggest cost drivers (Accommodation/Tickets) at a glance.
-         2. Progress Bar: CSS/HTML. Goal: Inform status of checklist.
-         3. Interactive Tabs: JS. Goal: Organize content logically. 
-         4. Confirmation: NO SVG graphics used. NO Mermaid JS used. Unicode icons used instead. -->
-    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <!-- Chosen Palette: Warm Neutrals (Stone) with Teal (Healing) & Orange (Energy) accents -->
 </head>
 <body class="bg-stone-50 text-stone-800 min-h-screen flex flex-col">
 
@@ -75,10 +71,9 @@
         <section id="intro-section" class="mb-6 bg-white rounded-xl shadow p-6 border-l-4 border-orange-400">
             <h2 class="text-lg font-bold mb-2">여행 컨셉: 힐링 & 소녀감성 🌿💅</h2>
             <p class="text-sm text-stone-600 leading-relaxed">
-                이번 여행은 아빠, 엄마, 그리고 초6 딸이 함께하는 특별한 가족 여행입니다. 
-                꽉 막힌 일정보다는 여유로운 <strong>힐링</strong>, 맛있는 <strong>미식</strong>, 즐거운 <strong>쇼핑</strong>, 
-                그리고 딸을 위한 <strong>소녀감성 충전</strong>(네일, 소품샵)에 집중했습니다.
-                아래 탭을 통해 일정과 예산, 준비물을 확인해보세요!
+                아빠, 엄마, 딸(초6)이 함께하는 다낭 여행! 
+                <strong>힐링</strong>, <strong>미식</strong>, <strong>쇼핑</strong>은 물론 딸을 위한 <strong>소녀감성 충전</strong>까지 완벽하게 준비했습니다.
+                각 장소별 상세한 <strong>이동 수단(그랩/도보/차량)</strong>을 확인하세요!
             </p>
         </section>
 
@@ -90,7 +85,7 @@
     </main>
 
     <!-- Bottom Navigation (Mobile Friendly) -->
-    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-stone-200 shadow-lg md:relative md:border-none md:shadow-none md:bg-transparent md:mt-4">
+    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-stone-200 shadow-lg md:relative md:border-none md:shadow-none md:bg-transparent md:mt-4 z-50">
         <div class="max-w-4xl mx-auto flex justify-around md:justify-center md:gap-8 p-3">
             <button onclick="switchView('itinerary')" class="nav-btn flex flex-col items-center p-2 text-stone-400 hover:text-stone-700" data-target="itinerary">
                 <span class="text-xl">🗓️</span>
@@ -119,88 +114,90 @@
                 {
                     day: 1, date: '12.31 (수)', title: '설레는 도착 & 카운트다운 🎉',
                     events: [
-                        { time: '18:45', icon: '🛫', text: '인천공항 출발 (WE201)', detail: '시간 변경 확인 필수' },
-                        { time: '21:55', icon: '🛬', text: '다낭 공항 도착', detail: '짐 찾고 입국장 밖 클룩 기사님 미팅' },
-                        { time: '22:45', icon: '🚐', text: '픽업 차량 탑승 → 윙크 호텔 이동', detail: '' },
-                        { time: '23:15', icon: '🏨', text: '윙크 호텔 체크인', detail: '24시간 스테이 적용 확인' },
-                        { time: '24:00', icon: '✨', text: 'HAPPY NEW YEAR!', detail: '루프탑/객실 불꽃놀이 & 야식(배달K)' }
+                        { time: '18:45', icon: '🛫', text: '인천공항 출발 (WE201)', transport: '', detail: '시간 변경 반영됨' },
+                        { time: '21:55', icon: '🛬', text: '다낭 공항 도착', transport: '', detail: '짐 찾고 입국장 밖 클룩 기사님 미팅' },
+                        { time: '22:45', icon: '🚐', text: '윙크 호텔 이동', transport: '클룩 픽업차량', detail: '편안하게 호텔로 이동' },
+                        { time: '23:15', icon: '🏨', text: '윙크 호텔 체크인', transport: '', detail: '24시간 스테이 적용 확인' },
+                        { time: '24:00', icon: '✨', text: 'HAPPY NEW YEAR!', transport: '', detail: '루프탑/객실 불꽃놀이 & 야식(배달K)' }
                     ]
                 },
                 {
                     day: 2, date: '01.01 (목)', title: '핑크빛 시내 투어 & 모녀 데이트 ✨',
                     events: [
-                        { time: '09:30', icon: '🚕', text: '호텔 → 핑크 성당 이동', detail: '그랩 이용 추천' },
-                        { time: '10:00', icon: '📸', text: '핑크 성당 (다낭 대성당)', detail: '아이 인생샷 스팟' },
-                        { time: '10:30', icon: '🚶', text: '한시장 & 금은방 환전', detail: 'Soan Ha 환전. 크록스, 라탄백, 원피스 쇼핑' },
-                        { time: '11:30', icon: '☕', text: '콩카페 (Cong Caphe)', detail: '코코넛 스무디 커피로 당 충전' },
-                        { time: '12:30', icon: '🍕', text: '점심: 피자포피스 (인도차이나점)', detail: '예약 필수. 화덕피자 & 게살파스타' },
-                        { time: '14:00', icon: '🛍️', text: '[Option] 아기자기 소품샵 투어', detail: '부부샵, 코메이 등. 아이들 취향 소품 천국!' },
-                        { time: '15:30', icon: '🚕', text: '영흥사(링엄사) 이동', detail: '해수관음상 & 미케비치 뷰' },
-                        { time: '17:00', icon: '🦀', text: '저녁: 목 식당 (Moc Seafood)', detail: '칠리새우, 모닝글로리, 가리비 구이' },
-                        { time: '18:30', icon: '🎡', text: '손트라 야시장 & 용다리', detail: '철판 아이스크림, 캐릭터 소품' },
-                        { time: '19:30', icon: '🏨', text: '호텔 복귀 & 휴식', detail: '루프탑 수영장 이용 가능' }
+                        { time: '09:30', icon: '🚕', text: '호텔 → 핑크 성당', transport: '그랩', detail: '도보 불가, 그랩 추천' },
+                        { time: '10:00', icon: '📸', text: '핑크 성당 (다낭 대성당) 관람', transport: '관람', detail: '아이 인생샷 스팟' },
+                        { time: '10:30', icon: '🚶', text: '한시장 & 금은방 환전', transport: '도보 1분', detail: 'Soan Ha 환전. 크록스, 라탄백, 원피스 쇼핑' },
+                        { time: '11:30', icon: '☕', text: '콩카페 1호점', transport: '도보 3분', detail: '코코넛 스무디 커피 당 충전' },
+                        { time: '12:30', icon: '🍕', text: '피자포피스 (인도차이나점)', transport: '도보 5~8분', detail: '날씨 더우면 그랩. 화덕피자 & 게살파스타' },
+                        { time: '14:00', icon: '🛍️', text: '아기자기 소품샵 투어', transport: '도보', detail: '부부샵, 코메이 등. 지비츠, 키링, 라탄백 쇼핑' },
+                        { time: '15:30', icon: '🚕', text: '영흥사(링엄사) 이동', transport: '그랩 (20분)', detail: '해수관음상 & 미케비치 뷰' },
+                        { time: '17:00', icon: '🦀', text: '목 식당 (Moc Seafood)', transport: '그랩 (내려오는 길)', detail: '칠리새우, 모닝글로리, 가리비 구이' },
+                        { time: '18:30', icon: '🎡', text: '손트라 야시장 & 용다리', transport: '그랩', detail: '철판 아이스크림, 캐릭터 소품' },
+                        { time: '19:30', icon: '🏨', text: '호텔 복귀 & 휴식', transport: '도보 or 그랩', detail: '가깝지만 피곤하면 그랩 추천' }
                     ]
                 },
                 {
                     day: 3, date: '01.02 (금)', title: '바나힐 (아이들의 천국) 🏰',
                     events: [
-                        { time: '09:30', icon: '🏨', text: '윙크 호텔 체크아웃', detail: '짐 확인 필수' },
-                        { time: '09:40', icon: '🚐', text: '바나힐 출발 (야놀자 차량)', detail: '캐리어 차량 보관' },
-                        { time: '10:30', icon: '🏰', text: '바나힐 테마파크', detail: '골든브릿지 → 판타지 파크(루지, 범퍼카) 집중' },
-                        { time: '16:30', icon: '🚐', text: '바나힐 → 노보텔 이동', detail: '바로 노보텔로 직행' },
-                        { time: '17:30', icon: '🏨', text: '노보텔 체크인', detail: '1 Bedroom Apt, 엑스트라 베드 확인' },
-                        { time: '20:00', icon: '🍜', text: '저녁: 마담란', detail: '호텔 후문 도보 5분. 반세오 맛집' },
-                        { time: '21:30', icon: '🦶', text: '발 마사지 (센스 스파 등)', detail: '노보텔 근처. 바나힐 피로 풀기' }
+                        { time: '09:30', icon: '🏨', text: '윙크 호텔 체크아웃', transport: '', detail: '빠진 짐 없는지 확인' },
+                        { time: '09:40', icon: '🚐', text: '바나힐 출발', transport: '야놀자 차량', detail: '캐리어 차량 트렁크 보관' },
+                        { time: '10:30', icon: '🚡', text: '바나힐 테마파크', transport: '케이블카/도보', detail: '골든브릿지 → 판타지 파크(루지, 범퍼카) 집중' },
+                        { time: '16:30', icon: '🚐', text: '바나힐 → 노보텔 이동', transport: '야놀자 차량', detail: '주차장 기사님 미팅 후 직행' },
+                        { time: '17:30', icon: '🏨', text: '노보텔 체크인', transport: '', detail: '1 Bedroom Apt, 엑스트라 베드 확인' },
+                        { time: '20:00', icon: '🍜', text: '저녁: 마담란', transport: '도보 5분', detail: '반세오 맛집 (호텔 후문)' },
+                        { time: '21:30', icon: '🦶', text: '발 마사지 (센스 스파 등)', transport: '도보', detail: '마담란/노보텔 근처라 도보 이동 가능' }
                     ]
                 },
                 {
                     day: 4, date: '01.03 (토)', title: '호이안 체험 & 감성 여행 🏮',
                     events: [
-                        { time: '10:30', icon: '🚐', text: '호이안 이동 (클룩 차량)', detail: '' },
-                        { time: '11:30', icon: '🥙', text: '점심: 호이안 맛집', detail: '포슈아 or 반미프엉' },
-                        { time: '13:00', icon: '🏖️', text: '안방 비치', detail: '라플라주/소울키친 카페 휴식' },
-                        { time: '15:30', icon: '🥥', text: '바구니 배 (코코넛 보트)', detail: '신나는 트로트 분위기 체험' },
-                        { time: '17:00', icon: '🏮', text: '[Option] 호이안 랜턴 만들기', detail: '최고의 기념품, 약 30-40분 소요' },
-                        { time: '18:00', icon: '🛶', text: '소원배 타기 & 야시장', detail: '소원초 띄우기' },
-                        { time: '20:00', icon: '🥟', text: '저녁: 미쓰리', detail: '화이트로즈, 완탄' },
-                        { time: '21:30', icon: '🚐', text: '다낭 복귀 (클룩 차량)', detail: '팁 10만동 준비' }
+                        { time: '10:30', icon: '🚐', text: '호이안 이동', transport: '클룩 차량', detail: '약 40분 소요' },
+                        { time: '11:30', icon: '🥙', text: '점심: 호이안 맛집', transport: '도보', detail: '포슈아 or 반미프엉 (올드타운 내 차량 불가)' },
+                        { time: '13:00', icon: '🏖️', text: '안방 비치', transport: '그랩', detail: '라플라주/소울키친 카페 휴식' },
+                        { time: '15:30', icon: '🥥', text: '바구니 배 (코코넛 보트)', transport: '그랩', detail: '신나는 트로트 분위기 체험' },
+                        { time: '17:00', icon: '🚕', text: '호이안 올드타운 입구 이동', transport: '그랩', detail: '' },
+                        { time: '17:10', icon: '🏮', text: '[Option] 랜턴 만들기', transport: '도보', detail: '공방 이동하여 체험' },
+                        { time: '18:00', icon: '🛶', text: '소원배 타기 & 야시장', transport: '나룻배/도보', detail: '소원초 띄우기' },
+                        { time: '20:00', icon: '🥟', text: '저녁: 미쓰리', transport: '도보', detail: '화이트로즈, 완탄' },
+                        { time: '21:30', icon: '🚐', text: '다낭 호텔 복귀', transport: '클룩 차량', detail: '올드타운 입구에서 기사님 미팅' }
                     ]
                 },
                 {
                     day: 5, date: '01.04 (일)', title: '쇼핑 & 헬리오 센터 🚢',
                     events: [
-                        { time: '오전', icon: '🛌', text: '늦잠 & 조식 브런치', detail: '여유로운 시작' },
-                        { time: '11:00', icon: '📸', text: '참 조각 박물관 & APEC 공원', detail: '호텔 근처 산책 및 사진' },
-                        { time: '12:30', icon: '🦐', text: '점심: 브릴리언트 씨푸드', detail: '깔끔하고 고급스러운 식당' },
-                        { time: '14:00', icon: '🛒', text: '롯데마트 쇼핑', detail: '탑젤리, 아하치즈, 쵸이젤리, 컵라면' },
-                        { time: '16:30', icon: '🎮', text: '헬리오 야시장 & 게임존', detail: '실내 오락실 게임 한 판' },
-                        { time: '19:30', icon: '🚢', text: '다낭 한강 유람선', detail: '용다리 불쇼 관람 (21:00)' },
-                        { time: '21:30', icon: '🦶', text: '발 마사지 & 숙소 복귀', detail: '추천: 골든 로터스 or 센스 스파. 그랩 이동.' }
+                        { time: '오전', icon: '🛌', text: '늦잠 & 조식 브런치', transport: '', detail: '여유로운 시작' },
+                        { time: '11:00', icon: '📸', text: '참 조각 박물관 & APEC 공원', transport: '그랩', detail: '가깝지만 더우니 그랩 추천' },
+                        { time: '12:30', icon: '🦐', text: '점심: 브릴리언트 씨푸드', transport: '그랩', detail: '깔끔하고 고급스러운 식당' },
+                        { time: '14:00', icon: '🛒', text: '롯데마트 쇼핑', transport: '그랩', detail: '탑젤리, 아하치즈, 쵸이젤리, 컵라면' },
+                        { time: '16:30', icon: '🎮', text: '헬리오 야시장 & 게임존', transport: '도보 3분', detail: '롯데마트 옆. 실내 오락실 추천' },
+                        { time: '19:30', icon: '🚢', text: '다낭 한강 유람선', transport: '그랩', detail: '선착장 이동. 용다리 불쇼 관람 (21:00)' },
+                        { time: '21:30', icon: '🦶', text: '발 마사지 & 숙소 복귀', transport: '그랩', detail: '골든 로터스 or 센스 스파. 마사지 후 그랩 이동' }
                     ]
                 },
                 {
                     day: 6, date: '01.05 (월)', title: '오행산 & Last Fun ✈️',
                     events: [
-                        { time: '11:00', icon: '🏨', text: '체크아웃 & 짐 보관', detail: '' },
-                        { time: '11:30', icon: '⛰️', text: '오행산 (마블 마운틴)', detail: '엘리베이터 이용. 동굴 탐험' },
-                        { time: '13:30', icon: '🍜', text: '점심: 미광 1A or 냐벱', detail: '' },
-                        { time: '15:30', icon: '🎡', text: '아시아 파크 (썬월드)', detail: '썬휠 대관람차, 놀이기구' },
-                        { time: '17:30', icon: '☕', text: '카페 & 막바지 쇼핑', detail: '웃띠크 등' },
-                        { time: '19:00', icon: '💆‍♀️', text: '투란 스파 (Turan Spa)', detail: '어른: 전신마사지 / 아이: 네일아트 (예약완료)' },
-                        { time: '20:30', icon: '🚐', text: '공항 이동 (스파 샌딩)', detail: '' },
-                        { time: '22:55', icon: '🛫', text: '다낭 출발 (WE202)', detail: '1/6 05:30 인천 도착' }
+                        { time: '11:00', icon: '🏨', text: '체크아웃 & 짐 보관', transport: '', detail: '호텔 로비 무료 보관' },
+                        { time: '11:30', icon: '⛰️', text: '오행산 (마블 마운틴)', transport: '그랩', detail: '엘리베이터 + 도보 이동' },
+                        { time: '13:30', icon: '🍜', text: '점심: 미광 1A or 냐벱', transport: '그랩', detail: '' },
+                        { time: '15:30', icon: '🎡', text: '아시아 파크 (썬월드)', transport: '그랩', detail: '내부 도보 이동. 썬휠 대관람차' },
+                        { time: '17:30', icon: '🍽️', text: '저녁 식사 (티아고 or 포홍)', transport: '그랩', detail: '티아고(가정식) 또는 포홍(쌀국수)' },
+                        { time: '18:40', icon: '🏨', text: '호텔 짐 찾기 & 픽업 대기', transport: '그랩/도보', detail: '투란 스파 픽업 차량 미팅 (로비)' },
+                        { time: '19:00', icon: '💆‍♀️', text: '투란 스파 (Turan Spa)', transport: '스파 픽업차량', detail: '어른(2): 90분 마사지 / 아이: 네일아트' },
+                        { time: '20:30', icon: '🚐', text: '공항 이동', transport: '스파 샌딩차량', detail: '편안하게 공항으로 이동' },
+                        { time: '22:55', icon: '🛫', text: '다낭 출발 (WE202)', transport: '', detail: '1/6 05:30 인천 도착' }
                     ]
                 }
             ],
             budget: [
-                { category: '입장권/투어 (바나힐, 오행산, 유람선 등)', amount: 4150000, color: '#f97316' }, // Orange 500
-                { category: '마사지/체험 (네일, 랜턴 등)', amount: 2300000, color: '#14b8a6' }, // Teal 500
-                { category: '식비 (피자포피스, 해산물 등)', amount: 2500000, color: '#ef4444' }, // Red 500
-                { category: '기타 (소원배, 팁 등)', amount: 300000, color: '#a8a29e' } // Stone 400
+                { category: '입장권/투어 (바나힐, 오행산 등)', amount: 4150000, color: '#f97316' }, // Orange
+                { category: '마사지/체험 (네일, 랜턴)', amount: 2300000, color: '#14b8a6' }, // Teal
+                { category: '식비 (피자포피스, 해산물)', amount: 2500000, color: '#ef4444' }, // Red
+                { category: '기타 (소원배, 팁)', amount: 300000, color: '#a8a29e' } // Stone
             ],
             checklist: [
                 { category: '필수 예약', items: ['항공권 E-티켓 출력', '호텔 바우처 저장', '여행자 보험 가입', '트래블로그/월렛 충전', '유심/이심 구매', 'Grab 앱 설치 & 카드등록', '클룩/야놀자 바우처 저장'] },
-                { category: '사전 요청', items: ['윙크호텔 24h 스테이 확인', '노보텔 엑스트라 베드 요청', '피자포피스 예약 (1/1)', '투란스파 예약 (샌딩/네일)'] },
+                { category: '사전 요청', items: ['윙크호텔 24h 스테이 확인', '노보텔 엑스트라 베드 요청', '피자포피스 예약 (1/1)', '투란스파 예약 (샌딩/네일/픽업)'] },
                 { category: '짐싸기', items: ['여권 (유효기간 확인)', '샤워기 필터 & 리필', '동지갑', '멀티탭 (3구 이상)', '상비약', '경량 패딩 (바나힐용)', '아이 용품 (헤드셋)', '팁용 현금 준비'] }
             ]
         };
@@ -252,7 +249,7 @@
         function renderItinerary(container) {
             const intro = document.createElement('div');
             intro.className = 'bg-stone-100 p-4 rounded-lg mb-4';
-            intro.innerHTML = `<p class="text-sm text-stone-600">📅 <strong>5박 6일 상세 일정</strong>입니다. 날짜를 클릭하여 세부 계획을 확인하세요. 소녀감성 체험과 힐링 포인트가 포함되어 있습니다.</p>`;
+            intro.innerHTML = `<p class="text-sm text-stone-600">📅 <strong>5박 6일 상세 일정</strong>입니다. 날짜를 클릭하여 세부 계획과 <strong>이동 수단</strong>을 확인하세요.</p>`;
             container.appendChild(intro);
 
             // Day Selectors
@@ -287,9 +284,12 @@
                 let eventsHtml = day.events.map(event => `
                     <div class="flex items-start gap-3 p-3 bg-white border border-stone-100 rounded-lg shadow-sm hover:shadow-md transition-shadow">
                         <div class="text-2xl mt-1">${event.icon}</div>
-                        <div>
-                            <span class="inline-block px-2 py-0.5 rounded text-xs font-bold bg-orange-100 text-orange-800 mb-1">${event.time}</span>
-                            <h4 class="font-bold text-stone-800">${event.text}</h4>
+                        <div class="flex-1">
+                            <div class="flex flex-wrap items-center gap-2 mb-1">
+                                <span class="text-xs font-bold bg-orange-100 text-orange-800 px-2 py-0.5 rounded">${event.time}</span>
+                                ${event.transport ? `<span class="transport-badge">🚗 ${event.transport}</span>` : ''}
+                            </div>
+                            <h4 class="font-bold text-stone-800 leading-tight">${event.text}</h4>
                             ${event.detail ? `<p class="text-xs text-stone-500 mt-1">${event.detail}</p>` : ''}
                         </div>
                     </div>
@@ -313,7 +313,7 @@
         function renderBudget(container) {
             const intro = document.createElement('div');
             intro.className = 'bg-stone-100 p-4 rounded-lg mb-4';
-            intro.innerHTML = `<p class="text-sm text-stone-600">💰 <strong>예상 경비(VND 기준)</strong>입니다. 항공권과 숙박비를 제외한 현지 지출 예상 내역입니다. (약 925만동)</p>`;
+            intro.innerHTML = `<p class="text-sm text-stone-600">💰 <strong>예상 경비(VND 기준)</strong>입니다. 항공/숙박 제외 현지 비용입니다. (약 925만동)</p>`;
             container.appendChild(intro);
 
             // Chart Container
@@ -343,7 +343,7 @@
                 new Chart(ctx, {
                     type: 'doughnut',
                     data: {
-                        labels: tripData.budget.map(d => d.category.split(' ')[0]), // Simplify labels
+                        labels: tripData.budget.map(d => d.category.split(' ')[0]),
                         datasets: [{
                             data: tripData.budget.map(d => d.amount),
                             backgroundColor: tripData.budget.map(d => d.color),
@@ -364,7 +364,7 @@
         function renderChecklist(container) {
             const intro = document.createElement('div');
             intro.className = 'bg-stone-100 p-4 rounded-lg mb-4';
-            intro.innerHTML = `<p class="text-sm text-stone-600">✅ <strong>여행 준비 체크리스트</strong>입니다. 클릭하여 완료 상태를 표시하세요. 진행 상황이 저장되지 않으므로 참고용으로 활용하세요.</p>`;
+            intro.innerHTML = `<p class="text-sm text-stone-600">✅ <strong>여행 준비 체크리스트</strong>입니다. 클릭하여 완료 상태를 표시하세요.</p>`;
             container.appendChild(intro);
 
             tripData.checklist.forEach(group => {
